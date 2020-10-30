@@ -10,7 +10,7 @@
 
 // start reading from the first byte (address 0) of the EEPROM
 int address = 0;
-byte value;
+char value;
 
 void setup() {
   // initialize serial and wait for port to open:
@@ -22,9 +22,11 @@ void setup() {
 
 void loop() {
   // read a byte from the current address of the EEPROM
+  char str[12] = "Hello world";
+  for(int i=0;i<12;i++){
+    EEPROM.update(i, str[i]);                //write Hello World to the EEPROM
+  }
   value = EEPROM.read(address);
-
-  
   
   Serial.print(address);
   Serial.print("\t");
@@ -42,9 +44,9 @@ void loop() {
     Rather than hard-coding the length, you should use the pre-provided length function.
     This will make your code portable to all AVR processors.
   ***/
-  address = address + 1;
-  if (address == EEPROM.length()) {
-    address = 0;
+  address = address + 1;       //go trough entire EEPROM until the end then exit
+  if (address > EEPROM.length()) {
+    exit(1);
   }
 
   /***
@@ -54,5 +56,5 @@ void loop() {
     ++address &= EEPROM.length() - 1;
   ***/
 
-  delay(500);
+  delay(10);
 }
